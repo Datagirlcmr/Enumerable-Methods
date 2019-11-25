@@ -8,10 +8,10 @@ module Enumerable
        self
     end
   
-    def my_each
+    def my_each_with_index
       index = 0
       while index < self.size
-        yield(index, self[index])
+        yield(self[index], index)
         index += 1
       end
        self
@@ -110,6 +110,32 @@ module Enumerable
         end
         true
       end
+
+      def my_count(element = nil)
+        total = 0
+        if block_given?
+          self.my_each do |x|
+            total += 1 if yield(x)
+          end
+        elsif element != nil
+          self.my_each do |x|
+            total += 1 if x == element
+          end
+        else
+          total = self.size
+          end
+        total
+        end
+
+        def my_map
+            arr = []
+            if proc.nil?
+              self.my_each { |x| arr << yield(x) }
+            else
+              self.my_each { |x| arr << proc.call(x) }
+            end
+            arr
+        end
   
   
   end
