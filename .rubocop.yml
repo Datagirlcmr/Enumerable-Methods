@@ -7,8 +7,6 @@ AllCops:
     - "Rakefile"
   DisplayCopNames: true
 
-# rubocop:disable Style/CaseEquality
-
 Metrics/LineLength:
   Max: 120
 Metrics/MethodLength:
