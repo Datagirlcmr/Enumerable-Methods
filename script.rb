@@ -33,7 +33,7 @@ module Enumerable
 
   def my_all?
     return to_enum unless block_given?
-    
+
     my_each do |x|
       return false unless yield(x)
     end
