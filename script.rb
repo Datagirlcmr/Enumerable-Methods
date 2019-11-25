@@ -32,12 +32,11 @@ module Enumerable
   end
 
   def my_all?
-    if block_given?
-      my_each do |x|
-        return false unless yield(x)
-      end
-      true
+    return to_enum unless block_given?
+    my_each do |x|
+      return false unless yield(x)
     end
+    true
   end
 
   def my_any?
@@ -50,12 +49,11 @@ module Enumerable
   end
 
   def my_none?
-    if block_given?
-      my_each do |x|
-        return false if yield(x)
-      end
-      true
+    return to_enum unless block_given?
+    my_each do |x|
+      return false if yield(x)
     end
+    true
   end
 
   def my_count(element = nil)

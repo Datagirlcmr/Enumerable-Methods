@@ -48,7 +48,7 @@ Implement a version of Ruby’s enumerable methods.
 
 Rubocop: 
 
-![rubocop-validation](doc/rubocop.png)
+![rubocop-validation](images/rubo.png)
 
 # Features
 
