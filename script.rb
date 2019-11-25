@@ -42,7 +42,7 @@ module Enumerable
 
   def my_any?(arg = nil, &proc)
     if block_given?
-      my_each { |elem| return true if proc.nil? ? yield(elem) : yield(elem) }
+      my_each { |elem| return true if proc.nil? yield(elem) }
     else
       my_each { |elem| return true if arg.nil? ? elem : check_validity(elem, arg) }
     end
