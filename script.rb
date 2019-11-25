@@ -136,7 +136,49 @@ module Enumerable
             end
             arr
         end
-  
-  
+
+        def my_inject(init = nil, sym = nil)
+            i = 1
+            if init.nil?
+              init = self[0]
+              i = 1
+            end
+            if init && sym.nil?
+              if init.class == Symbol
+                symbol = init
+                init = self[0]
+                i = 1
+                while i < self.size
+                  init = self[i].method(symbol).call(init)
+                  i += 1
+                end
+              elsif init.class == Integer
+                while i < self.size
+                  init = yield(init, self[i])
+                  i += 1
+                end
+              end
+            elsif init && sym
+              i = 0
+              while i < self.size
+                init = self[i].method(sym).call(init)
+                i += 1
+              end
+            elsif !init && !sym
+              raise ArgumentError, 'Incorrect arguments provided'
+            else
+              init = self[0]
+              i = 1
+              while i < self.size
+                init = yield(init, self[i])
+                i += 1
+              end
+            end
+            init
+          end
+        end
+        def multiply_els(arr)
+          arr.my_inject(:*)
+        end
   end
   
