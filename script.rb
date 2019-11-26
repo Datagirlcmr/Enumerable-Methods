@@ -1,30 +1,33 @@
 module Enumerable
   def my_each
     return to_enum unless block_given?
-      counter = 0
-      while counter < size
-        yield(self[counter])
-        counter += 1
-      end
+
+    counter = 0
+    while counter < size
+      yield(self[counter])
+      counter += 1
+    end
     self
   end
 
   def my_each_with_index
     return to_enum unless block_given?
-      counter = 0
-      while counter < size
-        yield(self[counter], counter)
-        counter += 1
-      end
+
+    counter = 0
+    while counter < size
+      yield(self[counter], counter)
+      counter += 1
+    end
     self
   end
 
   def my_select
     return to_enum unless block_given?
-      arr = []
-      my_each do |x|
-        arr << x if yield(x)
-      end
+
+    arr = []
+    my_each do |x|
+      arr << x if yield(x)
+    end
     arr
   end
 
@@ -35,15 +38,15 @@ module Enumerable
       return false unless yield(x)
     end
     if args.is_a?(Class)
-      self.my_each do |x|
+      my_each do |x|
         return false unless x.is_a?(args)
       end
     elsif pattern.is_a?(Regexp)
-      self.my_each do |x|
+      my_each do |x|
         return false unless args.match(x.to_s)
       end
     else
-      self.my_each do |x|
+      my_each do |x|
         return false unless x == args
       end
     end
@@ -56,18 +59,18 @@ module Enumerable
       return true if yield(x)
     end
     if args.is_a?(Class)
-      self.my_each do |x|
+      my_each do |x|
         return true if x.is_a?(args)
       end
     elsif args.is_a?(Regexp)
-      self.my_each do |x|
+      my_each do |x|
         return true if args.match(x.to_s)
       end
     else
-      self.my_each do |x|
+      my_each do |x|
         return true if x == args
       end
-    end 
+    end
   end
 
   def my_none?(args = nil)
@@ -77,15 +80,15 @@ module Enumerable
       return false if yield(x)
     end
     if args.is_a?(Class)
-      self.my_each do |x|
+      my_each do |x|
         return false if x.is_a?(args)
       end
     elsif args.is_a?(Regexp)
-      self.my_each do |x|
+      my_each do |x|
         return false if args.match(x.to_s)
       end
     else
-      self.my_each do |x|
+      my_each do |x|
         return false if x == args
       end
     end
