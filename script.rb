@@ -1,61 +1,94 @@
 module Enumerable
   def my_each
-    if block_given?
+    return to_enum unless block_given?
       counter = 0
       while counter < size
         yield(self[counter])
         counter += 1
       end
-    end
     self
   end
 
   def my_each_with_index
-    if block_given?
+    return to_enum unless block_given?
       counter = 0
       while counter < size
         yield(self[counter], counter)
         counter += 1
       end
-    end
     self
   end
 
   def my_select
-    if block_given?
+    return to_enum unless block_given?
       arr = []
       my_each do |x|
         arr << x if yield(x)
       end
-    end
     arr
   end
 
-  def my_all?
-    return to_enum unless block_given?
+  def my_all?(args = nil)
+    return true unless block_given?
 
     my_each do |x|
       return false unless yield(x)
     end
-    true
-  end
-
-  def my_any?
-    if block_given?
-      my_each do |x|
-        return true if yield(x)
+    if args.is_a?(Class)
+      self.my_each do |x|
+        return false unless x.is_a?(args)
+      end
+    elsif pattern.is_a?(Regexp)
+      self.my_each do |x|
+        return false unless args.match(x.to_s)
+      end
+    else
+      self.my_each do |x|
+        return false unless x == args
       end
     end
-    false
   end
 
-  def my_none?
-    return to_enum unless block_given?
+  def my_any?(args = nil)
+    return false unless block_given?
+
+    my_each do |x|
+      return true if yield(x)
+    end
+    if args.is_a?(Class)
+      self.my_each do |x|
+        return true if x.is_a?(args)
+      end
+    elsif args.is_a?(Regexp)
+      self.my_each do |x|
+        return true if args.match(x.to_s)
+      end
+    else
+      self.my_each do |x|
+        return true if x == args
+      end
+    end 
+  end
+
+  def my_none?(args = nil)
+    return true unless block_given?
 
     my_each do |x|
       return false if yield(x)
     end
-    true
+    if args.is_a?(Class)
+      self.my_each do |x|
+        return false if x.is_a?(args)
+      end
+    elsif args.is_a?(Regexp)
+      self.my_each do |x|
+        return false if args.match(x.to_s)
+      end
+    else
+      self.my_each do |x|
+        return false if x == args
+      end
+    end
   end
 
   def my_count(element = nil)
@@ -64,7 +97,7 @@ module Enumerable
       my_each do |x|
         total += 1 if yield(x)
       end
-    elsif !element.nil?
+    elsif element
       my_each do |x|
         total += 1 if x == element
       end
@@ -75,6 +108,8 @@ module Enumerable
   end
 
   def my_map
+    return to_enum unless block_given?
+
     arr = []
     if proc.nil?
       my_each { |x| arr << yield(x) }
