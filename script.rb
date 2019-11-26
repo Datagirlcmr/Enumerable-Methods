@@ -33,67 +33,85 @@ module Enumerable
     arr
   end
 
-  def my_all?(args = nil)
-    return true unless block_given?
-
-    my_each do |x|
-      return false unless yield(x)
-    end
-    if args.is_a?(Class)
+  def my_all?(pattern = nil)
+    if block_given?
       my_each do |x|
-        return false unless x.is_a?(args)
+        return false unless yield(x)
       end
-    elsif pattern.is_a?(Regexp)
-      my_each do |x|
-        return false unless args.match(x.to_s)
+    elsif !pattern.nil?
+      if pattern.is_a?(Class)
+        my_each do |x|
+          return false unless x.is_a?(pattern)
+        end
+      elsif pattern.is_a?(Regexp)
+        my_each do |x|
+          return false unless pattern.match(x.to_s)
+        end
+      else
+        my_each do |x|
+          return false unless x == pattern
+        end
       end
     else
       my_each do |x|
-        return false unless x == args
+        return false unless x
       end
     end
+    true
   end
 
-  def my_any?(args = nil)
-    return false unless block_given?
-
-    my_each do |x|
-      return true if yield(x)
-    end
-    if args.is_a?(Class)
+  def my_any?(patter = nil)
+    if block_given?
       my_each do |x|
-        return true if x.is_a?(args)
+        return true if yield(x)
       end
-    elsif args.is_a?(Regexp)
-      my_each do |x|
-        return true if args.match(x.to_s)
+    elsif !patter.nil?
+      if patter.is_a?(Class)
+        my_each do |x|
+          return true if x.is_a?(patter)
+        end
+      elsif patter.is_a?(Regexp)
+        my_each do |x|
+          return true if patter.match(x.to_s)
+        end
+      else
+        my_each do |x|
+          return true if x == patter
+        end
       end
     else
       my_each do |x|
-        return true if x == args
+        return true if x
       end
     end
+    false
   end
 
-  def my_none?(args = nil)
-    return true unless block_given?
-
-    my_each do |x|
-      return false if yield(x)
-    end
-    if args.is_a?(Class)
+  def my_none?(pat = nil)
+    if block_given?
       my_each do |x|
-        return false if x.is_a?(args)
+        return false if yield(x)
       end
-    elsif args.is_a?(Regexp)
-      my_each do |x|
-        return false if args.match(x.to_s)
+    elsif !pat.nil?
+      if pat.is_a?(Class)
+        my_each do |x|
+          return false if x.is_a?(pat)
+        end
+      elsif pat.is_a?(Regexp)
+        my_each do |x|
+          return false if pat.match(x.to_s)
+        end
+      else
+        my_each do |x|
+          return false if x == pat
+        end
       end
     else
       my_each do |x|
-        return false if x == args
+        return false if x
       end
     end
+    true
   end
 
   def my_count(element = nil)
